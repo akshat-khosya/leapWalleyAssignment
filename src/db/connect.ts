@@ -1,22 +1,33 @@
-import mongoose, { ConnectOptions } from "mongoose";
-import config from "config";
+import { Sequelize } from 'sequelize-typescript';
+import config from "../config/default";
 import log from "../logger";
+import { Content } from "../model/content.model";
+import { Likes } from "../model/likes.model";
+import { User } from "../model/user.model";
 
-function connect() {
-    const dbUri = config.get("dbUri") as string;
+const connect = async () => {
+    const dbUsername = config.get("dbUsername") as string;
+    const dbPassword = config.get("dbPassword") as string;
+    const dbHost = config.get("dbHost") as string;
+    const dbPort = config.get("dbPort") as number;
+    const dbName = config.get("dbName") as string;
 
-    return mongoose
-        .connect(dbUri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        } as ConnectOptions)
-        .then(() => {
-            log.info("Database connceted successfully")
-        })
-        .catch(err => {
-            log.error("db error", err);
-            process.exit(1);
-        });
+    const sequelize = new Sequelize({
+        dialect: 'postgres', host: dbHost,
+        port: dbPort,
+        database: dbName,
+        username: dbUsername,
+        password: dbPassword,
+        logging: false,
+        models: [User, Likes, Content],
+    });
+    try {
+        await sequelize.authenticate();
+        log.info('Connection has been established successfully.');
+    } catch (error) {
+        console.log(error);
+        log.error('Unable to connect to the database:', error);
+    }
 }
 
 export default connect;
