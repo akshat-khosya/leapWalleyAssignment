@@ -1,5 +1,11 @@
 # Installation Steps
 
+1. **Run the following command :**
+
+```
+sudo docker-compose up --build -d
+```
+
 # API Documentation
 
 ## Postman Collection Link
