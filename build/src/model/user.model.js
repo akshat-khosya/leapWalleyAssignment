@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-let User = exports.User = class User extends sequelize_typescript_1.Model {
+let User = class User extends sequelize_typescript_1.Model {
 };
 __decorate([
     (0, sequelize_typescript_1.Column)({
@@ -16,9 +16,10 @@ __decorate([
         primaryKey: true,
     })
 ], User.prototype, "user_id", void 0);
-exports.User = User = __decorate([
+User = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,
         tableName: "users",
     })
 ], User);
+exports.User = User;

@@ -14,7 +14,8 @@ class Config {
             dbPassword: process.env.DB_PASSWORD,
             dbHost: process.env.DB_HOST,
             dbPort: process.env.DB_PORT,
-            dbName: process.env.DB_NAME
+            dbName: process.env.DB_NAME,
+            redisUrl: process.env.REDIS_URL
         };
     }
     get(key) {

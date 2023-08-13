@@ -35,10 +35,24 @@ const connect = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     try {
         yield sequelize.authenticate();
-        logger_1.default.info('Connection has been established successfully.');
+        //         await sequelize.query(`CREATE TABLE users (
+        //   user_id VARCHAR(255) PRIMARY KEY
+        //         );
+        //         CREATE TABLE content (
+        //   content_id VARCHAR(255) PRIMARY KEY,
+        //   user_id VARCHAR(255) REFERENCES users(user_id)
+        // );
+        // CREATE TABLE likes (
+        //   id VARCHAR(255) PRIMARY KEY,
+        //   content_id VARCHAR(255) REFERENCES content(content_id),
+        //   user_id VARCHAR(255) REFERENCES users(user_id)
+        // );
+        //         `).then((res) => {
+        //         }).catch((err) => {
+        //         });
+        logger_1.default.info('DB Connection has been established successfully.');
     }
     catch (error) {
-        console.log(error);
         logger_1.default.error('Unable to connect to the database:', error);
     }
 });

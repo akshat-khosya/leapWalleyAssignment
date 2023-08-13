@@ -1,14 +1,18 @@
 import * as redis from 'redis';
 import log from '../logger';
+import config from '../config/default';
 
 class RedisService {
     private client: redis.RedisClientType
 
     constructor() {
-        this.client = redis.createClient();
+        const url = config.get("redisUrl");
+        log.info(url);
+        this.client = redis.createClient({ url: url });
         this.client.connect().then(() => {
             log.info("Connected to Redis Client")
         }).catch((err) => {
+            console.log(err);
             log.error("Error in connecting client " + err);
         });
     }

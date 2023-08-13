@@ -1,5 +1,4 @@
-CREATE DATABASE LeapWallet;
--- Delay execution for 5 seconds
+
 CREATE TABLE users (
   user_id VARCHAR(255) PRIMARY KEY
 );

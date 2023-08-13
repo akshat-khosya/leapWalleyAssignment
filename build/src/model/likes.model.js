@@ -10,7 +10,7 @@ exports.Likes = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const user_model_1 = require("./user.model");
 const content_model_1 = require("./content.model");
-let Likes = exports.Likes = class Likes extends sequelize_typescript_1.Model {
+let Likes = class Likes extends sequelize_typescript_1.Model {
 };
 __decorate([
     (0, sequelize_typescript_1.Column)({
@@ -38,9 +38,10 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => content_model_1.Content)
 ], Likes.prototype, "content", void 0);
-exports.Likes = Likes = __decorate([
+Likes = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,
         tableName: "likes",
     })
 ], Likes);
+exports.Likes = Likes;

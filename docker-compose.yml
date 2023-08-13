@@ -1,3 +1,4 @@
+version: "3"
 services:
   postgres:
     image: postgres
@@ -5,17 +6,22 @@ services:
       POSTGRES_USER: akshat
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: LeapWallet
-    ports:
-      - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis
-    volumes:
-      - ./redis.conf:/etc/redis/redis.conf
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     ports:
-      - "6379:6379"
+      - 6379:6379
+    volumes:
+      - .db:/data
+    restart: always
+    entrypoint: redis-server --appendonly yes
 
   leapawallet:
     build:
@@ -25,11 +31,12 @@ services:
       DB_USER: akshat
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME: leapwallet
+      DB_NAME: LeapWallet
       DB_PASSWORD: 12345
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: 12345
+      REDIS_URL: "redis://redis:6379"
     ports:
       - "4000:4000"
     depends_on:

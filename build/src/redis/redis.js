@@ -37,12 +37,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const redis = __importStar(require("redis"));
 const logger_1 = __importDefault(require("../logger"));
+const default_1 = __importDefault(require("../config/default"));
 class RedisService {
     constructor() {
-        this.client = redis.createClient();
+        const url = default_1.default.get("redisUrl");
+        logger_1.default.info(url);
+        this.client = redis.createClient({ url: url });
         this.client.connect().then(() => {
             logger_1.default.info("Connected to Redis Client");
         }).catch((err) => {
+            console.log(err);
             logger_1.default.error("Error in connecting client " + err);
         });
     }
