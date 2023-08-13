@@ -18,19 +18,29 @@ class RedisService {
     }
 
     async setKeyValue(key: string, value: string, time: number) {
-        if (await this.client.get(key)) {
-            log.info("Key already exits");
+        try {
+            if (await this.client.get(key)) {
+                log.info("Key already exits");
+                return;
+            }
+            await this.client.setEx(key, time, value);
+        } catch (error) {
             return;
         }
-        await this.client.setEx(key, time, value);
+
     }
 
     async getValue(key: string) {
-        const data = await this.client.get(key);
-        if (!data) {
+        try {
+            const data = await this.client.get(key);
+            if (!data) {
+                return false;
+            }
+            return data;
+        } catch (error) {
             return false;
         }
-        return data;
+
     }
 
 

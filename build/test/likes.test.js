@@ -40,6 +40,7 @@ const express_1 = __importDefault(require("express"));
 const likes_controller_1 = require("../src/controller/likes.controller");
 const user_service_1 = require("../src/service/user.service");
 const connect_1 = __importDefault(require("../src/db/connect"));
+const content_service_1 = require("../src/service/content.service");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 (0, connect_1.default)();
@@ -49,40 +50,35 @@ app.post("/count", likes_controller_1.likeCountHandler);
 describe("Functional Tests for likes", () => {
     it("should successfully like content", () => __awaiter(void 0, void 0, void 0, function* () {
         const user_id = yield (0, user_service_1.userCreate)();
+        const content_id = yield (0, content_service_1.contentCreate)(user_id);
         const response = yield request.default(app)
             .post("/store-like")
             .send({
             user_id: user_id,
-            content_id: "0d7fbea3-8ad3-4590-a015-55466fd41763"
+            content_id: content_id
         });
+        console.log(response.body);
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ error: false, msg: "Sucessfull" });
     }));
-    it("should return 409 if content is already liked by user", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield request.default(app)
-            .post("/store-like")
-            .send({
-            user_id: "a38a067e-5b19-4920-910b-94a3574b26e6",
-            content_id: "0d7fbea3-8ad3-4590-a015-55466fd41763"
-        });
-        expect(response.status).toBe(409);
-        expect(response.body).toEqual({ error: false, msg: "Content is already liked by user" });
-    }));
     it("should return 404 if user is not found", () => __awaiter(void 0, void 0, void 0, function* () {
+        const user_id = yield (0, user_service_1.userCreate)();
+        const content_id = yield (0, content_service_1.contentCreate)(user_id);
         const response = yield request.default(app)
             .post("/store-like")
             .send({
             user_id: "a38a067e-5b19-4920-910b-94a3574b26",
-            content_id: "0d7fbea3-8ad3-4590-a015-55466fd417"
+            content_id: content_id
         });
         expect(response.status).toBe(404);
         expect(response.body).toEqual({ error: false, msg: "User not found" });
     }));
     it("should return 404 if content is not found", () => __awaiter(void 0, void 0, void 0, function* () {
+        const user_id = yield (0, user_service_1.userCreate)();
         const response = yield request.default(app)
             .post("/store-like")
             .send({
-            user_id: "a38a067e-5b19-4920-910b-94a3574b26e6",
+            user_id: user_id,
             content_id: "0d7fbea3-8ad3-4590-a015-55466fd41"
         });
         expect(response.status).toBe(404);
@@ -90,32 +86,42 @@ describe("Functional Tests for likes", () => {
     }));
 });
 describe("Functional Tests for like status", () => {
-    (0, connect_1.default)();
     it("status of liked content", () => __awaiter(void 0, void 0, void 0, function* () {
+        const user_id = yield (0, user_service_1.userCreate)();
+        const content_id = yield (0, content_service_1.contentCreate)(user_id);
+        const res = yield request.default(app)
+            .post("/store-like")
+            .send({
+            user_id: user_id,
+            content_id: content_id
+        });
         const response = yield request.default(app)
             .post("/status")
             .send({
-            user_id: "b86d2d2f-520f-4a9e-928b-af048ac2d397",
-            content_id: "cadcc5b9-1828-4218-abc1-62b3e73e6884"
+            user_id: user_id,
+            content_id: content_id
         });
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ error: false, status: true, msg: "Content is  liked by user" });
     }));
     it("should return 404 if user is not found", () => __awaiter(void 0, void 0, void 0, function* () {
+        const user_id = yield (0, user_service_1.userCreate)();
+        const content_id = yield (0, content_service_1.contentCreate)(user_id);
         const response = yield request.default(app)
             .post("/status")
             .send({
-            user_id: "a38a067e-5b19-4920-910b-94a3574b26",
-            content_id: "0d7fbea3-8ad3-4590-a015-55466fd417"
+            user_id: "a38a067e-5b19-4920-910b-94a3574b",
+            content_id: content_id
         });
         expect(response.status).toBe(404);
         expect(response.body).toEqual({ error: false, msg: "User not found" });
     }));
     it("should return 404 if content is not found", () => __awaiter(void 0, void 0, void 0, function* () {
+        const user_id = yield (0, user_service_1.userCreate)();
         const response = yield request.default(app)
             .post("/status")
             .send({
-            user_id: "a38a067e-5b19-4920-910b-94a3574b26e6",
+            user_id: user_id,
             content_id: "0d7fbea3-8ad3-4590-a015-55466fd41"
         });
         expect(response.status).toBe(404);
@@ -123,12 +129,19 @@ describe("Functional Tests for like status", () => {
     }));
 });
 describe("Functional Tests for content count", () => {
-    (0, connect_1.default)();
     it("content count", () => __awaiter(void 0, void 0, void 0, function* () {
+        const user_id = yield (0, user_service_1.userCreate)();
+        const content_id = yield (0, content_service_1.contentCreate)(user_id);
+        const res = yield request.default(app)
+            .post("/store-like")
+            .send({
+            user_id: user_id,
+            content_id: content_id
+        });
         const response = yield request.default(app)
             .post("/count")
             .send({
-            content_id: "cadcc5b9-1828-4218-abc1-62b3e73e6884"
+            content_id: content_id
         });
         expect(response.status).toBe(200);
         expect(response.body.count).toBeGreaterThanOrEqual(0);

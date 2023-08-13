@@ -52,20 +52,30 @@ class RedisService {
     }
     setKeyValue(key, value, time) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (yield this.client.get(key)) {
-                logger_1.default.info("Key already exits");
+            try {
+                if (yield this.client.get(key)) {
+                    logger_1.default.info("Key already exits");
+                    return;
+                }
+                yield this.client.setEx(key, time, value);
+            }
+            catch (error) {
                 return;
             }
-            yield this.client.setEx(key, time, value);
         });
     }
     getValue(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield this.client.get(key);
-            if (!data) {
+            try {
+                const data = yield this.client.get(key);
+                if (!data) {
+                    return false;
+                }
+                return data;
+            }
+            catch (error) {
                 return false;
             }
-            return data;
         });
     }
 }

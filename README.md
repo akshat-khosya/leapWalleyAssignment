@@ -6,6 +6,16 @@
 sudo docker-compose up --build -d
 ```
 
+2. **To run the test**
+
+```
+npm i
+
+npm run test
+```
+
+### Postgres should be ruuning in background for the test to run the above setup 1 will do the task
+
 # API Documentation
 
 ## Postman Collection Link
